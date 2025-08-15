@@ -11,8 +11,8 @@
 #include "rk3568.dtsi"
 
 / {
-	model = "NSY-G68 AX3000 Router";
-	compatible = "nsy,g68-plus", "rockchip,rk3568";
+	model = "BDY-G18 AX3000 Router";
+	compatible = "bdy,g18-pro", "rockchip,rk3568";
 
 	aliases {
 		ethernet0 = &gmac0;
@@ -290,22 +290,6 @@
 			pinctrl-names = "default";
 			pinctrl-0 = <&led_power_en>;
 		};
-	};
-
-	rtlgsw@0 {
-		compatible = "realtek,rtl8367s";
-		realtek,mdio = <&mdio0>;
-		mii-bus = <&mdio0>;
-		realtek,id = <29>;
-		phy-id = <29>;
-		cpu_port = <7>;
-
-		//txdelay, rxdelay, mode, ability.force_mode, ability.txpause, ability.rxpause, ability.link, ability.duplex, speed
-		//sgmii,
-		realtek,extif1 = <0 0 11 1 1 1 1 1 2>;
-		//rgmii
-		realtek,extif2 = <0 0 1 1 1 1 1 1 2>;
-		status = "okay";
 	};
 };
 
@@ -631,7 +615,7 @@
 			rockchip,pins = <0 RK_PC3 RK_FUNC_GPIO &pcfg_pull_none>;
 		};
 		pcie30x2_reset_h: pcie30x2-reset-h {
-			rockchip,pins = <0 RK_PC6 RK_FUNC_GPIO &pcfg_pull_none>;
+			rockchip,pins = <4 RK_PC4 RK_FUNC_GPIO &pcfg_pull_none>;
 		};
 		pcie2x1_reset_h: pcie2x1-reset-h {
 			rockchip,pins = <3 RK_PC1 RK_FUNC_GPIO &pcfg_pull_none>;
@@ -694,15 +678,15 @@
 		reset-gpios = <&gpio0 RK_PC3 GPIO_ACTIVE_HIGH>;
 		num-lanes = <0x1>; /*可能不生效,但是拆分需要打补丁,如果是吧,打补丁*/
 		pinctrl-0 = <&pcie30x1_reset_h>;
-		status = "okay";
+		status = "disabled";
 };
 
 //fe280000
 &pcie3x2 {
 		vpcie3v3-supply = <&vcc3v3_pcie>;
-		reset-gpios = <&gpio0 RK_PC6 GPIO_ACTIVE_HIGH>;
+		reset-gpios = <&gpio4 RK_PC4 GPIO_ACTIVE_HIGH>;
 		status = "okay";
-		num-lanes = <0x1>;
+		num-lanes = <0x2>;
 		pinctrl-0 = <&pcie30x2_reset_h>;
 };
 
@@ -751,26 +735,17 @@
 	status = "okay";
 };
 
-&pipe_phy_grf1 {
-	status = "okay";
-};
-
 &combphy1 {
 	rockchip,sgmii-mac-sel = <1>;
-	status = "okay";
-};
-
-&xpcs {
 	status = "okay";
 };
 
 &gmac1 {
 	assigned-clocks = <&cru SCLK_GMAC1_RX_TX>;
 	assigned-clock-parents = <&gmac1_xpcsclk>;
-	status = "okay";
+	status = "disabled";
 	phy-mode = "sgmii";
 	rockchip,pipegrf = <&pipegrf>;
-	rockchip,xpcs = <&xpcs>;
 	//snps,reset-gpio = <&gpio2 RK_PC2 GPIO_ACTIVE_LOW>;
 	//snps,reset-active-low;
 	//snps,reset-delays-us = <0 20000 100000>;
@@ -991,10 +966,6 @@
 		spi-rx-bus-width = <4>;
 		spi-tx-bus-width = <1>;
 	};
-};
-
-&rng {
-	status = "okay";
 };
 
 //i2c@fe5a0000
